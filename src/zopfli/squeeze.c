@@ -557,14 +557,14 @@ static void GetBestLengths(const ZopfliOptions* options, const unsigned char* in
 
           if (mfinexport & 2 && i + match > inend - ZOPFLI_MAX_MATCH - 1 && i <= inend - ZOPFLI_MAX_MATCH - 1) {
             unsigned now = inend - ZOPFLI_MAX_MATCH - i;
-            Bt3Zip_MatchFinder_Skip(&p, now);
             CopyMF(&p, &mf);
             right = 1;
-            Bt3Zip_MatchFinder_Skip(&p, match - now);
+            Bt3Zip_MatchFinder_Skip2(&p, now);
+            Bt3Zip_MatchFinder_Skip2(&p, match - now);
 
           }
           else{
-            Bt3Zip_MatchFinder_Skip(&p, match);
+            Bt3Zip_MatchFinder_Skip2(&p, match);
           }
         notenoughsame = i + same + ZOPFLI_MAX_MATCH - 1;
 
