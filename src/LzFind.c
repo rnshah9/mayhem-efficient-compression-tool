@@ -35,6 +35,7 @@ static unsigned short * GetMatches(UInt32 lenLimit, UInt32 curMatch, UInt32 pos,
   UInt32 *ptr0 = son + (_cyclicBufferPos << 1) + 1;
   UInt32 *ptr1 = son + (_cyclicBufferPos << 1);
   UInt32 len0 = 0, len1 = 0;
+  UInt32 last_Delta = 30;
   for (;;)
   {
     UInt32 delta = pos - curMatch;
@@ -49,15 +50,24 @@ static unsigned short * GetMatches(UInt32 lenLimit, UInt32 curMatch, UInt32 pos,
     if (pb[len] == cur[len])
     {
       ++len;
-      if (len != lenLimit && pb[len] == cur[len])
+      //This might lead to uninitalized data being read, but greatly improves performance
+      if (pb[len] == cur[len])
       {
         len = GetMatch(&cur[len], &pb[len], cur + lenLimit, cur + lenLimit - 8) - cur;
       }
 
       if (maxLen < len)
       {
-        *distances++ = maxLen = len;
-        *distances++ = delta;
+        if(ZopfliGetDistSymbol(delta) == last_Delta) {
+          *(distances - 2) = maxLen = len;
+          *(distances - 1) = delta;
+        }
+        else {
+          *distances++ = maxLen = len;
+          *distances++ = delta;
+
+        }
+        last_Delta = ZopfliGetDistSymbol(delta);
         if (len == lenLimit)
         {
           *ptr1 = pair[0];
@@ -144,7 +154,7 @@ unsigned short Bt3Zip_MatchFinder_GetMatches(CMatchFinder *p, unsigned short *di
 {
   unsigned lenl = p->bufend - p->buffer; { if (lenl < ZOPFLI_MIN_MATCH) {return 0;}}
   const Byte *cur = p->buffer;
-  UInt32 hashValue = ((cur[2] | ((UInt32)cur[0] << 8)) ^ crc[cur[1]]) & 0xFFFF;
+  UInt32 hashValue = ((cur[2] | ((UInt32)cur[0] << 8)) ^ crc[cur[1]]) & 0xFFF;
   UInt32 curMatch = p->hash[hashValue];
   p->hash[hashValue] = p->pos;
   UInt32 offset = (UInt32)(GetMatches(lenl > ZOPFLI_MAX_MATCH ? ZOPFLI_MAX_MATCH : lenl, curMatch, MF_PARAMS(p), distances, 2) - distances);
@@ -157,7 +167,7 @@ void Bt3Zip_MatchFinder_Skip(CMatchFinder* p, UInt32 num)
   while (num--)
   {
     const Byte *cur = p->buffer;
-    UInt32 hashValue = ((cur[2] | ((UInt32)cur[0] << 8)) ^ crc[cur[1]]) & 0xFFFF;
+    UInt32 hashValue = ((cur[2] | ((UInt32)cur[0] << 8)) ^ crc[cur[1]]) & 0xFFF;
     UInt32 curMatch = p->hash[hashValue];
     p->hash[hashValue] = p->pos;
     unsigned lenlimit = p->bufend - p->buffer;
