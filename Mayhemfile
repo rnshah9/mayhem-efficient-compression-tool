@@ -1,0 +1,7 @@
+project: rnshah9/playground
+target: playground
+image: ghcr.io/rnshah9/playground:efficient-compression-tool
+
+cmds:
+  - cmd: /efficient-compression-tool/src/build/ect @@
+    filepath: /test.png
