@@ -1,6 +1,5 @@
-project: rnshah9/playground
-target: playground
-image: ghcr.io/rnshah9/playground:efficient-compression-tool
+project: rnshah9/mayhem-efficient-compression-tool
+target: ect
 
 cmds:
   - cmd: /efficient-compression-tool/src/build/ect @@
