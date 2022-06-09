@@ -1,0 +1,6 @@
+project: efficient-compression-tool
+target: ect
+
+cmds:
+  - cmd: /efficient-compression-tool/src/build/ect /test.png
+    filepath: /test.png
