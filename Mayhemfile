@@ -1,6 +1,6 @@
-project: rnshah9/mayhem-efficient-compression-tool
+project: efficient-compression-tool
 target: ect
 
 cmds:
-  - cmd: /efficient-compression-tool/src/build/ect @@
+  - cmd: /efficient-compression-tool/src/build/ect /test.png
     filepath: /test.png
