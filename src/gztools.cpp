@@ -12,40 +12,9 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#ifndef _WIN32
 #include <unistd.h>
-
-int ungz(const char * Infile, const char * Outfile){
-    gzFile r = gzopen(Infile, "rb");
-    if (!r){
-        return 1;
-    }
-    FILE * stream = fopen (Outfile, "wb");
-    if (!stream){
-        return 1;
-    }
-    char buf [8192];
-    int bytes;
-    do {
-        bytes = gzread(r, &buf, 8192);
-      if(bytes){
-        fwrite(buf, 1, bytes, stream);
-      }
-      else if (bytes == 0) {
-        break;
-      }
-      else if (bytes < 0) {
-        printf("%s: ungzip error\n", Infile);
-        gzclose_r(r);
-        fclose(stream);
-        unlink(Outfile);
-        return 1;
-      }
-    }
-    while (!gzeof(r));
-    gzclose_r(r);
-    fclose(stream);
-  return 0;
-}
+#endif
 
 int IsGzip(const char * Infile){
     FILE * stream = fopen (Infile, "rb");

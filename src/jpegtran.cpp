@@ -17,7 +17,9 @@
 
 /* Modified by Felix Hanau. */
 
-#include "mozjpeg/transupp.c"
+#include "mozjpeg/jinclude.h"
+#include "mozjpeg/jpeglib.h"
+#include "mozjpeg/transupp.h"           /* Support routines for jpegtran */
 #include "main.h"
 #include "support.h"
 
@@ -198,7 +200,7 @@ int mozjpegtran (bool arithmetic, bool progressive, bool strip, unsigned autorot
     exit(1);
   }
 
-  if (fread(inbuffer, 1, insize, fp) < insize) {
+  if (fread(inbuffer, 1, insize, fp) < (size_t)insize) {
     fprintf(stderr, "ECT: can't read from %s\n", Infile);
   }
   fclose(fp);
@@ -302,7 +304,7 @@ int mozjpegtran (bool arithmetic, bool progressive, bool strip, unsigned autorot
     }
 
     /* Write new file. */
-    if (JFWRITE(fp, outbuffer, outsize) < outsize) {
+    if (fwrite(outbuffer, 1, outsize, fp) < outsize) {
       fprintf(stderr, "ECT: can't write to %s\n", Outfile);
     }
     fclose(fp);

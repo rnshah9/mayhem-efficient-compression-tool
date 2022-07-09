@@ -18,8 +18,13 @@ add_library(optipng::optipng ALIAS optipng)
 #make sure that we are using custom zlib and custom libpng options
 set(PNG_BUILD_ZLIB ON CACHE BOOL "use custom zlib within libpng" FORCE)
 set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../zlib/ CACHE FILEPATH "custom zlib directory" FORCE)
-add_compile_options(-Wno-macro-redefined)
+if(NOT WIN32)
+	add_compile_options(-Wno-macro-redefined)
+endif()
 add_compile_definitions(PNG_USER_CONFIG)
+
+#silence libpng warnings
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-null-pointer-subtraction")
 
 add_subdirectory(../libpng libpng EXCLUDE_FROM_ALL)
 target_link_libraries(optipng

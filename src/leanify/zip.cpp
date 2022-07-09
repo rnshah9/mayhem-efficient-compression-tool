@@ -4,14 +4,15 @@
 #include <string>
 #include <vector>
 #include <fcntl.h>
-#include <unistd.h>
 #include <algorithm>
 #ifdef _WIN32
-#include <Windows.h>
 #ifdef _MSC_VER
+#define NOMINMAX
 #include <io.h>
 #endif
+#include <Windows.h>
 #else
+#include <unistd.h>
 #include <sys/param.h>
 #endif
 

@@ -24,6 +24,10 @@ Author: jyrki.alakuijala@gmail.com (Jyrki Alakuijala)
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#if _MSC_VER
+#include <malloc.h>
+#define alloca _alloca
+#endif
 
 #include "blocksplitter.h"
 #include "deflate.h"
@@ -136,7 +140,7 @@ typedef uint32_t U32;
 #define DICTIONARY_LOGSIZE3 15
 
 #define MAXD3 (1<<DICTIONARY_LOGSIZE3)
-#define MAX_DISTANCE3 MAXD3 - 1
+#define MAX_DISTANCE3 (MAXD3 - 1)
 #define HASH_LOG3 DICTIONARY_LOGSIZE3
 #define HASHTABLESIZE3 (1 << HASH_LOG3)
 
