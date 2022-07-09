@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 project(zopfli LANGUAGES C CXX)
+find_package(ZLIB)
 
 add_library(zopfli
 	blocksplitter.c
@@ -22,6 +23,7 @@ add_library(zopfli
 	zopfli.h)
 
 add_library(zopfli::zopfli ALIAS zopfli)
+ target_link_libraries(zopfli ZLIB::ZLIB)
 
 target_compile_features(zopfli
 	PRIVATE
