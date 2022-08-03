@@ -3,3 +3,4 @@ target: ect
 
 cmds:
   - cmd: /install/bin/ect @@
+    filepath: /test.png
